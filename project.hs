@@ -1,7 +1,7 @@
 import Data.Trees.KdTree
-import Data.List
-import Data.Char
 import Text.Read
+-- import Data.List
+-- import Data.Char
 -- import qualified Data.Map as Map
 
 -- Structure of a k-dimensional point
@@ -26,13 +26,12 @@ listToPoint k = KPoint (length k) k
 main :: IO ()
 main = do
     inputs <- readInputs
-    -- print inputs
 
     -- Lista de listas [[String]]
     -- print (map words inputs)
 
     -- Dicionário [("Nome", [Double])]
-    -- print (map buildTuple (map words inputs))
+    -- print (map (buildTuple.words) inputs)
 
     -- Lista de pontos [[Double]]:
     -- print (map snd (map buildTuple (map words inputs)))
@@ -46,6 +45,6 @@ main = do
     let kdt = fromList kpl
 
     -- Busca pelo ponto 4-dimensional mais próximo
-    print (nearestNeighbor kdt (KPoint 4 [60.0,60.0,60.0,60.0]))
+    print $ nearestNeighbor kdt (KPoint 4 [5.0,1930.0,1990.0,2000.0])
 
     -- mapM_ putStrLn inputs
