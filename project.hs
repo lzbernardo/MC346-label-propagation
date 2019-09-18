@@ -5,14 +5,10 @@ import Text.Read
 -- import qualified Data.Map as Map
 
 -- Structure of a k-dimensional point
-data KPoint = KPoint { k :: Int, list :: [Double]} deriving (Eq, Ord, Show)
+data KPoint = KPoint { name :: String, k :: Int, list :: [Double]} deriving (Eq, Ord, Show)
 instance Point KPoint where
   dimension p = k p
   coord i p = (list p)!!i
-
--- This one reads each line into a string
-readInputs :: IO [String]
-readInputs = fmap lines getContents
 
 -- Turns a subset of ["pointName", "x1", "x2", ... "xn"] into a tuple ("pointName", [x1, x2, ... xn])
 buildTuple :: [String] -> (String,[Double])
@@ -21,30 +17,33 @@ buildTuple (x:xs) = (x,map (read::String->Double) xs)
 
 -- Converts a list of doubles to a K-dimensional point
 listToPoint :: [Double] -> KPoint
-listToPoint k = KPoint (length k) k
+listToPoint l = KPoint "unnamed" (length l) l
+
+tupleToPoint :: (String, [Double]) -> KPoint
+tupleToPoint (s,d) = KPoint s (length d) d
 
 main :: IO ()
 main = do
-    inputs <- readInputs
 
-    -- Lista de listas [[String]]
-    -- print (map words inputs)
-
+    inputs <- fmap lines getContents
+    -- mapM_ putStrLn inputs
+    print inputs
     -- Dicionário [("Nome", [Double])]
-    -- print (map (buildTuple.words) inputs)
-
-    -- Lista de pontos [[Double]]:
-    -- print (map snd (map buildTuple (map words inputs)))
-    -- print (map (snd.buildTuple.words) inputs)
+    let dict = map (buildTuple.words) inputs
+    putStrLn "DICT ::: "
+    print dict
 
     -- Lista de KPoints [KPoint]
-    let kpl = map (listToPoint.snd.buildTuple.words) inputs
+    -- let kpl = map (listToPoint.snd) dict -- DEPRECATED
+    let kpl = map tupleToPoint dict
+    putStrLn "KPL ::: "
     print kpl
 
     -- Constrói a KDTree
     let kdt = fromList kpl
 
     -- Busca pelo ponto 4-dimensional mais próximo
-    print $ nearestNeighbor kdt (KPoint 4 [5.0,1930.0,1990.0,2000.0])
+    putStrLn "NN ::: "
+    print $ nearestNeighbor kdt (KPoint "flamengo" 4 [5.0,1930.0,1990.0,2000.0])
 
-    -- mapM_ putStrLn inputs
+ -- DUVIDA DE PARALELIZAÇÃO: um ponto por vez ou é possível paralelizar? ex: x     .   .  . . o - o ponto mais a esquerda se torna x ou o?
