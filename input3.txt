@@ -1,0 +1,8 @@
+x 0
+vas 5
+pal 7
+cru 9
+san 10
+
+x 1
+san 2
